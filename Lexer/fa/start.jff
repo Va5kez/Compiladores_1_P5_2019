@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 7.1.--><structure>
+	<type>fa</type>
+	<automaton>
+		<!--The list of states.-->
+		<state id="0" name="q0">
+			<x>99.0</x>
+			<y>124.0</y>
+			<label>text = ""</label>
+			<initial/>
+		</state>
+		<state id="2" name="q2">
+			<x>228.0</x>
+			<y>125.0</y>
+			<label>Eof</label>
+			<final/>
+		</state>
+		<!--The list of transitions.-->
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>-EOL</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>-SPACE</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>2</to>
+			<read>EOF</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>-TAB</read>
+		</transition>
+		<note>
+			<text>Name:start</text>
+			<x>136.0</x>
+			<y>21.0</y>
+		</note>
+		<note>
+			<text>Token Description
+Entero = Entero
+Real = Real
+Cadena = Cadena
+Booleano = Booleano
+Caracter = Caracter
+Arreglo = Arreglo
+De = De
+Funcion = Funcion
+Procedimiento = Procedimiento
+Var = Var
+Inicio = Inicio
+Fin = Fin
+Si = Si
+Entonces = Entonces
+Sino = Sino
+Para = Para
+Mientras = Mientras
+Haga = Haga
+Llamar = Llamar
+Repita = Repita
+Hasta = Hasta
+Caso = Caso
+O = O
+Y = Y
+No = No
+Div = Div
+Mod = Mod
+Lea = Lea
+Escriba = Escriba
+Retorne = Retorne
+Tipo = Tipo
+Es = Es
+Registro = Registro
+Archivo = Archivo
+Secuencial = Secuencial
+Abrir = Abrir
+Como = Como
+Lectura = Lectura
+Escritura = Escritura
+Cerrar = Cerrar
+Leer = Leer
+Escribir = Escribir
+Verdadero = Verdadero
+Falso = Falso
+Final = Final
+ID = ID</text>
+			<x>351.0</x>
+			<y>11.0</y>
+		</note>
+	</automaton>
+</structure>

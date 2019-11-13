@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 7.1.--><structure>
+	<type>fa</type>
+	<automaton>
+		<!--The list of states.-->
+		<state id="0" name="q0">
+			<x>95.0</x>
+			<y>186.0</y>
+			<initial/>
+		</state>
+		<state id="1" name="q1">
+			<x>145.0</x>
+			<y>24.0</y>
+			<label>Op_Add</label>
+			<final/>
+		</state>
+		<state id="2" name="q2">
+			<x>195.0</x>
+			<y>44.0</y>
+			<label>Op_Sub</label>
+			<final/>
+		</state>
+		<state id="3" name="q3">
+			<x>245.0</x>
+			<y>62.0</y>
+			<label>Op_Mul</label>
+			<final/>
+		</state>
+		<state id="4" name="q4">
+			<x>292.0</x>
+			<y>81.0</y>
+			<label>Op_Pow</label>
+			<final/>
+		</state>
+		<state id="5" name="q5">
+			<x>267.0</x>
+			<y>186.0</y>
+		</state>
+		<state id="6" name="q6">
+			<x>393.0</x>
+			<y>93.0</y>
+			<label>Op_Assign</label>
+			<final/>
+		</state>
+		<state id="7" name="q7">
+			<x>392.0</x>
+			<y>152.0</y>
+			<label>Op_Less_OE</label>
+			<final/>
+		</state>
+		<state id="8" name="q8">
+			<x>391.0</x>
+			<y>209.0</y>
+			<label>Op_Equal_2</label>
+			<final/>
+		</state>
+		<state id="9" name="q9">
+			<x>392.0</x>
+			<y>265.0</y>
+			<label>Op_LT</label>
+			<final/>
+		</state>
+		<state id="10" name="q10">
+			<x>256.0</x>
+			<y>232.0</y>
+			<label>Op_Equal</label>
+			<final/>
+		</state>
+		<state id="11" name="q11">
+			<x>154.0</x>
+			<y>293.0</y>
+		</state>
+		<state id="12" name="q12">
+			<x>244.0</x>
+			<y>298.0</y>
+			<label>Op_Gre_OE</label>
+			<final/>
+		</state>
+		<state id="13" name="q13">
+			<x>224.0</x>
+			<y>366.0</y>
+			<label>Op_GT</label>
+			<final/>
+		</state>
+		<!--The list of transitions.-->
+		<transition>
+			<from>0</from>
+			<to>4</to>
+			<read>^</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>7</to>
+			<read>=</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>10</to>
+			<read>=</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>5</to>
+			<read>&lt;</read>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>13</to>
+			<read/>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<read>+</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>2</to>
+			<read>-</read>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>12</to>
+			<read>=</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>8</to>
+			<read>&gt;</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>3</to>
+			<read>*</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>9</to>
+			<read/>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>11</to>
+			<read>&gt;</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>6</to>
+			<read>-</read>
+		</transition>
+		<note>
+			<text>Name:operator2</text>
+			<x>20.0</x>
+			<y>34.0</y>
+		</note>
+	</automaton>
+</structure>

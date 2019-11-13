@@ -1,0 +1,58 @@
+#include "expr_lexer.h"
+
+/*!fa2lexer
+    %option generate.tokens = true;
+
+    %file "start.jff";
+    %file "number.jff";
+    %file "operator1.jff";
+    %file "operator2.jff";
+    %file "comments.jff";
+    %file "ident.jff";
+    %file "char.jff";
+    %file "string.jff";
+     
+    %generate.state_enum(State);
+*/
+
+std::string KeyWords[45] = {"entero","real","cadena","booleano","caracter","arreglo","de","funcion","procedimiento","var","inicio","fin","si","entonces",
+                        "sino","para","mientras","haga","llamar","repita","hasta","caso","o","y","no","div","mod","lea","escriba","retorne","tipo","es",
+                        "registro","archivo","secuencial","abrir","como","lectura","escritura","cerrar","leer","escribir","verdadero","falso","final"};
+
+Token ExprLexer::getNextToken(){
+    text = "";
+    /*!fa2lexer
+        %generate.lexer(text);
+    */
+}
+
+Token ExprLexer::findKeyWord(std::string text)
+    {
+        std::string temp = getText();
+        std::transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
+        for(int i = 0; i < 45; i++)
+        {
+            if(temp == KeyWords[i])
+            {
+                switch(i)
+                {
+                    case 0: return Entero; case 1: return Real; case 2: return Cadena;
+                    case 3: return Booleano; case 4: return Caracter; case 5: return Arreglo;
+                    case 6: return De; case 7: return Funcion; case 8: return Procedimiento;
+                    case 9: return Var; case 10: return Inicio; case 11: return Fin;
+                    case 12: return Si; case 13: return Entonces; case 14: return Sino;
+                    case 15: return Para; case 16: return Mientras; case 17: return Haga;
+                    case 18: return Llamar; case 19: return Repita; case 20: return Hasta;
+                    case 21: return Caso; case 22: return O; case 23: return Y;
+                    case 24: return No; case 25: return Div; case 26: return Mod;
+                    case 27: return Lea; case 28: return Escriba; case 29: return Retorne;
+                    case 30: return Tipo; case 31: return Es; case 32: return Registro;
+                    case 33: return Archivo; case 34: return Secuencial; case 35: return Abrir;
+                    case 36: return Como; case 37: return Lectura; case 38: return Escritura;
+                    case 39: return Cerrar; case 40: return Leer; case 41: return Escribir;
+                    case 42: return Verdadero; case 43: return Falso; case 44: return Final;
+                }
+            }
+        }
+        return ID;
+    }
