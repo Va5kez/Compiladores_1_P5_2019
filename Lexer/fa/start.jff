@@ -3,10 +3,15 @@
 	<automaton>
 		<!--The list of states.-->
 		<state id="0" name="q0">
-			<x>99.0</x>
+			<x>93.0</x>
 			<y>124.0</y>
 			<label>text = ""</label>
 			<initial/>
+		</state>
+		<state id="1" name="q1">
+			<x>169.0</x>
+			<y>209.0</y>
+			<label>line += 1</label>
 		</state>
 		<state id="2" name="q2">
 			<x>228.0</x>
@@ -17,8 +22,8 @@
 		<!--The list of transitions.-->
 		<transition>
 			<from>0</from>
-			<to>0</to>
-			<read>-EOL</read>
+			<to>2</to>
+			<read>EOF</read>
 		</transition>
 		<transition>
 			<from>0</from>
@@ -27,18 +32,23 @@
 		</transition>
 		<transition>
 			<from>0</from>
-			<to>2</to>
-			<read>EOF</read>
-		</transition>
-		<transition>
-			<from>0</from>
 			<to>0</to>
 			<read>-TAB</read>
 		</transition>
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<read>-EOL</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>0</to>
+			<read/>
+		</transition>
 		<note>
 			<text>Name:start</text>
-			<x>136.0</x>
-			<y>21.0</y>
+			<x>202.0</x>
+			<y>32.0</y>
 		</note>
 		<note>
 			<text>Token Description

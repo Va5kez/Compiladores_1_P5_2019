@@ -17,6 +17,15 @@
 			<label>stringConstant</label>
 			<final/>
 		</state>
+		<state id="3" name="q3">
+			<x>202.0</x>
+			<y>205.0</y>
+			<label>stringError();</label>
+		</state>
+		<state id="4" name="%start">
+			<x>301.0</x>
+			<y>206.0</y>
+		</state>
 		<!--The list of transitions.-->
 		<transition>
 			<from>1</from>
@@ -24,14 +33,24 @@
 			<read>other</read>
 		</transition>
 		<transition>
-			<from>1</from>
-			<to>2</to>
-			<read>"</read>
-		</transition>
-		<transition>
 			<from>0</from>
 			<to>1</to>
-			<read>"</read>
+			<read>-"</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>2</to>
+			<read>-"</read>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>4</to>
+			<read/>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>3</to>
+			<read>-EOL</read>
 		</transition>
 		<note>
 			<text>Name:string</text>
