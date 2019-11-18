@@ -8,17 +8,16 @@
 			<initial/>
 		</state>
 		<state id="1" name="q1">
-			<x>157.0</x>
+			<x>172.0</x>
 			<y>126.0</y>
-			<label>ischar(ch)</label>
 		</state>
 		<state id="2" name="q2">
-			<x>232.0</x>
-			<y>124.0</y>
+			<x>276.0</x>
+			<y>129.0</y>
 		</state>
 		<state id="3" name="q3">
-			<x>317.0</x>
-			<y>125.0</y>
+			<x>367.0</x>
+			<y>129.0</y>
 			<label>charConstant</label>
 			<final/>
 		</state>
@@ -26,7 +25,7 @@
 		<transition>
 			<from>1</from>
 			<to>2</to>
-			<read/>
+			<read>ischar?</read>
 		</transition>
 		<transition>
 			<from>0</from>
