@@ -22,12 +22,12 @@ private:
     void stringError() {std::cerr << "Error en la linea " << line <<" : String contiene 1 o mas fin de linea -> EOL " << "\n";}
     bool ischar(int ch2){ 
         if(ch2 >126 && ch2 <32){
-            std::cerr << "Caracer fuera del rango ascii [32 - 126]" << '\n';
-            return 0;
+            std::cerr << "Error en linea " << line << " : Caracter fuera del rango ascii [32 - 126]" << '\n';
+            return false;
         }
         else
             return true;
-        }
+    }
 
 private:
     std::istream &in;
