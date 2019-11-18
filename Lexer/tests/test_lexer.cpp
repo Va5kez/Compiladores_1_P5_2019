@@ -1,22 +1,19 @@
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-
 #include <sstream>
 #include <memory>
 #include <cstring>
-#include "doctest.h"
 #include "expr_lexer.h"
 
-const char *test1 = "0x123 0b01001 0 1234 0xfafb";
-const char *test2 = "+ - * ^ < <= <> > >= = ( ) [ ] , :";
-const char *test3 = "_identificador96 booleanoId booleano CaRaCtEr entero abrir real";
-
-doctest::String toString(Token tk) {
+std::string toString(Token tk) {
     switch (tk) {
         case Token::intConstant: return "intConstant";
+        case Token::charConstant: return "charConstant";
+        case Token::stringConstant: return "stringConstant";
+        case Token::ID: return "ID";
         case Token::Op_Add: return "Add";
         case Token::Op_Sub: return "Sub";
         case Token::Op_Mul: return "Mult";
         case Token::Op_Pow: return "Power";
+        case Token::Op_Assign: return "Assign";
         case Token::Op_LT: return "Less Than";
         case Token::Op_Less_OE: return "Less or Equal";
         case Token::Op_Equal_2: return "Equality 2";
@@ -29,124 +26,43 @@ doctest::String toString(Token tk) {
         case Token::CloseBr: return "CloseBrackets";
         case Token::Coma: return "Coma";
         case Token::Colon: return "Colon";
-        case Token::Caracter: return "Caracter";
-        case Token::Booleano: return "Booleano";
-        case Token::Abrir: return "Abrir";
-        case Token::Real: return "Real";
+        case Token::Entero: return "Entero"; case Token::Real: return "Real"; case Token::Cadena: return "Cadena";
+        case Token::Booleano: return "Booleano"; case Token::Caracter: return "Caracter"; case Token::Arreglo: return "Arreglo";
+        case Token::De: return "De"; case Token::Funcion: return "Funcion"; case Token::Procedimiento: return "Procedimiento";
+        case Token::Var: return "Var"; case Token::Inicio: return "Inicio"; case Token::Fin: return "Fin";
+        case Token::Si: return "Si"; case Token::Entonces: return "Entonces"; case Token::Sino: return "Sino";
+        case Token::Para: return "Para"; case Token::Mientras: return "Mientras"; case Token::Haga: return "Haga";
+        case Token::Llamar: return "Llamar"; case Token::Repita: return "Repita"; case Token::Hasta: return "Hasta";
+        case Token::Caso: return "Caso"; case Token::O: return "O"; case Token::Y: return "Y";
+        case Token::No: return "No"; case Token::Div: return "Div"; case Token::Mod: return "Mod";
+        case Token::Lea: return "Lea"; case Token::Escriba: return "Escriba"; case Token::Retorne: return "Retorne";
+        case Token::Tipo: return "Tipo"; case Token::Es: return "Es"; case Token::Registro: return "Registro";
+        case Token::Archivo: return "Archivo"; case Token::Secuencial: return "Secuencial"; case Token::Abrir: return "Abrir";
+        case Token::Como: return "Como"; case Token::Lectura: return "Lectura"; case Token::Escritura: return "Escritura";
+        case Token::Cerrar: return "Cerrar"; case Token::Leer: return "Leer"; case Token::Escribir: return "Escribir";
+        case Token::Verdadero: return "Verdadero"; case Token::Falso: return "Falso"; case Token::Final: return "Final";
+
         case Token::Eof: return "Eof";
         default: return "Unknown";
     }
 }
 
-TEST_CASE("intConstant") {
-    std::istringstream in;
+int main(int argc, char **argv)
+{
+    std::ifstream file(argv[1]);
+    if(file.is_open())
+    {
+        ExprLexer l(file);
+        Token token = l.getNextToken();
 
-    in.str(test1);
-    ExprLexer l(in);
-
-    Token tk = l.getNextToken();
-    CHECK( tk == Token::intConstant );
-    CHECK( l.getText() == "0x123" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::intConstant );
-    CHECK( l.getText() == "0b01001" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::intConstant );
-    CHECK( l.getText() == "0" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::intConstant );
-    CHECK( l.getText() == "1234" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::intConstant );
-    CHECK( l.getText() == "0xfafb" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Eof );
-}
-
-TEST_CASE("Operators 1 & 2") {
-    std::istringstream in;
-
-    in.str(test2);
-    ExprLexer l(in);
-    
-    Token tk = l.getNextToken();
-    CHECK( tk == Token::Op_Add );
-    CHECK( l.getText() == "+" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Op_Sub );
-    CHECK( l.getText() == "-" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Op_Mul );
-    CHECK( l.getText() == "*" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Op_Pow );
-    CHECK( l.getText() == "^" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Op_LT );
-    CHECK( l.getText() == "<" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Op_Less_OE );
-    CHECK( l.getText() == "<=" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Op_Equal_2 );
-    CHECK( l.getText() == "<>" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Op_GT );
-    CHECK( l.getText() == ">" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Op_Gre_OE );
-    CHECK( l.getText() == ">=" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Op_Equal );
-    CHECK( l.getText() == "=" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenPar );
-    CHECK( l.getText() == "(" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::ClosePar );
-    CHECK( l.getText() == ")" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::OpenBr );
-    CHECK( l.getText() == "[" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::CloseBr );
-    CHECK( l.getText() == "]" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Coma );
-    CHECK( l.getText() == "," );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Colon );
-    CHECK( l.getText() == ":" );
-    
-}
-
-TEST_CASE("Keywords and ID") {
-    std::istringstream in;
-
-    in.str(test3);
-    ExprLexer l(in);
-
-    Token tk = l.getNextToken();
-    CHECK( tk == Token::ID );
-    CHECK( l.getText() == "_identificador96" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::ID );
-    CHECK( l.getText() == "booleanoId" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Booleano );
-    CHECK( l.getText() == "booleano" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Caracter );
-    CHECK( l.getText() == "CaRaCtEr" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Entero );
-    CHECK( l.getText() == "entero" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Abrir );
-    CHECK( l.getText() == "abrir" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Real );
-    CHECK( l.getText() == "real" );
-    tk = l.getNextToken();
-    CHECK( tk == Token::Eof );
+        while(token != Token::Eof)
+        {
+            std::cout << "Token " << toString(token) << " -> " << l.getText() << std::endl;
+            token = l.getNextToken();
+        }
+    }
+    else
+    {
+        std::cout << "Error al intentar abrir el archivo" << std::endl;
+    }
 }
