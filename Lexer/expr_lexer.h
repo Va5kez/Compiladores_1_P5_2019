@@ -18,11 +18,18 @@ public:
 private:
     int getNextChar(){return in.get();}
     void ungetChar(int ch){in.unget();}
-    void reportError(int ch) {std::cerr << "Caracter desconocido : " << char(ch) << "\n";}
+    void reportError(int ch) {std::cerr << "Error en la linea " << line << " : Caracter desconocido -> " << char(ch) << "\n";}
+    void stringError() {std::cerr << "Error en la linea " << line <<" : String contiene 1 o mas fin de linea -> EOL " << "\n";}
+    void ischar(int ch2){ 
+        if(ch2 >126 && ch2 <32)
+            std::cerr << "Caracer fuera del rango ascii [32 - 126]" << '\n';
+        else{} 
+        }
 
 private:
     std::istream &in;
     std::string text;
+    int line = 1;
 };
 
 #endif
