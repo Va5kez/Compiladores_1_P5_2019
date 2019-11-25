@@ -11,11 +11,68 @@ void Parser::parse()
 }
 void Parser::program()
 {
-
+    if(checkTk(Token::Tipo))
+        subtypes_sections();
+    if(checkTk(Token::Entero, Token::Booleano, Token::Caracter, Token::Arreglo))
+        variable_section();
+    if(checkTk(Token::Funcion, Token::Procedimiento))
+    {
+        subprogram_decl();
+        while(checkTk(Token::Funcion, Token::Procedimiento))
+        {
+            subprogram_decl();
+            curr_token = lexer.getNextToken();
+            if(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+        }
+        if(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+    }
+    if(checkTk(Token::Inicio))
+    {
+        curr_token = lexer.getNextToken();
+        if(checkTk(Token::Eol))
+            curr_token = lexer.getNextToken();
+        if(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
+        {
+            statement();
+            while(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+            while(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
+            {
+                statement();
+                if(checkTk(Token::Eol))
+                    curr_token = lexer.getNextToken();
+            }
+        }
+        while(checkTk(Token::Eol))
+            curr_token = lexer.getNextToken();
+        if(checkTk(Token::Fin))
+        {
+            curr_token = lexer.getNextToken();
+            if(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+        }
+        else
+            throw "Program -> Se esperaba Fin pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+    }
+    else
+        throw "Program -> Se esperaba Inicio pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
 }
 void Parser::subtypes_sections()
 {
-
+    if(checkTk(Token::Tipo))
+    {
+        subprogram_decl();
+        if(checkTk(Token::Eol))
+            curr_token = lexer.getNextToken();
+        while(checkTk(Token::Tipo))
+        {
+            curr_token = lexer.getNextToken();
+            if(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+        }
+    }
 }
 void Parser::subtype_decl()
 {
@@ -41,7 +98,20 @@ void Parser::subtype_decl()
 }
 void Parser::variable_section()
 {
-
+    if(checkTk(Token::Entero, Token::Booleano, Token::Caracter, Token::Arreglo))
+    {
+        variable_decl();
+        curr_token = lexer.getNextToken();
+        if(checkTk(Token::Eol))
+            curr_token = lexer.getNextToken();
+        while(checkTk(Token::Entero, Token::Booleano, Token::Caracter, Token::Arreglo))
+        {
+            variable_decl();
+            curr_token = lexer.getNextToken();
+            if(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+        }
+    }
 }
 void Parser::variable_decl()
 {
@@ -106,7 +176,37 @@ void Parser::array_type()
 }
 void Parser::subprogram_decl()
 {
-
+    subprogram_header();
+    if(checkTk(Token::Eol))
+        curr_token = lexer.getNextToken();
+    if(checkTk(Token::Entero, Token::Booleano, Token::Caracter, Token::Arreglo))
+        variable_section();
+    if(checkTk(Token::Inicio))
+    {
+        curr_token = lexer.getNextToken();
+        if(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
+        {
+            statement();
+            if(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+            while(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
+            {
+                statement();
+            }
+        }
+        if(checkTk(Token::Eol))
+            curr_token = lexer.getNextToken();
+        if(checkTk(Token::Fin))
+        {
+            curr_token = lexer.getNextToken();
+            if(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+        }
+        else
+            throw "Subprogram_Decl -> Se esperaba Fin pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+    }
+    else
+        throw "Subprogram_Decl -> Se esperaba inicio pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
 }
 void Parser::subprogram_header()
 {
@@ -127,6 +227,7 @@ void Parser::function_header()
             curr_token = lexer.getNextToken();
             if(checkTk(Token::OpenPar))
             {
+                curr_token = lexer.getNextToken();
                 if(checkTk(Token::Var, Token::Entero, Token::Booleano, Token::Caracter, Token::Arreglo))
                 {
                     argument_decl();
@@ -159,6 +260,7 @@ void Parser::procedure_header()
             curr_token = lexer.getNextToken();
             if(checkTk(Token::OpenPar))
             {
+                curr_token = lexer.getNextToken();
                 if(checkTk(Token::Var, Token::Entero, Token::Booleano, Token::Caracter, Token::Arreglo))
                 {
                     argument_decl();
@@ -175,7 +277,7 @@ void Parser::procedure_header()
                 curr_token = lexer.getNextToken();
         }
         else
-            throw "Se esperaba ID pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+            throw "Procedimiento -> Se esperaba ID pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
     }
 }
 void Parser::argument_decl()
@@ -204,7 +306,6 @@ void Parser::statement()
 {
     if(checkTk(Token::ID))
     {
-        curr_token = lexer.getNextToken();
         lvalue();
         if(checkTk(Token::Op_Assign))
         {
@@ -212,7 +313,7 @@ void Parser::statement()
             expr();
         }
         else
-            throw "Se esperaba '<-' pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+            throw "Statement:ID -> Se esperaba '<-' pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
     }
     else if(checkTk(Token::Llamar))
     {
@@ -308,7 +409,7 @@ void Parser::statement()
                     throw "Se esperaba Mientras pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
             }
             else 
-                throw "Se esperaba Fin pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+                throw "Statement Mientras -> Se esperaba Fin pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
         }
         else 
             throw "Se esperaba Haga pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
@@ -327,7 +428,11 @@ void Parser::statement()
         while(checkTk(Token::Eol))
             curr_token = lexer.getNextToken();
         if(checkTk(Token::Hasta))
+        {
+            curr_token = lexer.getNextToken();
             expr();
+        }
+            
         else
             throw "Se esperaba Hasta pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
     }
@@ -337,6 +442,7 @@ void Parser::statement()
         lvalue();
         if(checkTk(Token::Op_Assign))
         {
+            curr_token = lexer.getNextToken();
             expr();
             if(checkTk(Token::Hasta))
             {
@@ -364,7 +470,7 @@ void Parser::statement()
                             throw "Se esperaba Para pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
                     }
                     else
-                        throw "Se esperaba Fin pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+                        throw " Statement Para -> Se esperaba Fin pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
                 }
                 else
                     throw "Se esperaba Haga pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
@@ -373,7 +479,7 @@ void Parser::statement()
                 throw "Se esperaba Hasta pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
         }
         else
-            throw "Se esperaba '<-' pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+            throw "Statement:Para -> Se esperaba '<-' pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
     }
     else
         throw "Se esperaba ID | llamar | escriba | lea | retorne | si | mientras | repita | para pero se encontro " + lexer.getText() + 
@@ -468,34 +574,48 @@ void Parser::expr()
     {
         curr_token = lexer.getNextToken();
         if(checkTk(Token::OpenPar))
+        {
             expr_p2();
+            expr_p();
+        }
         else
+        {
             lvalue_p();
+            expr_p();
+        }
     }
     else if(checkTk(Token::intConstant, Token::charConstant, Token::Verdadero,  Token::Falso))
+    {
         constant();
+        expr_p();
+    }
+        
     else if(checkTk(Token::Op_Sub))
     {
         curr_token = lexer.getNextToken();
         expr();
+        expr_p();
     }
     else if(checkTk(Token::No))
     {
         curr_token = lexer.getNextToken();
         expr();
+        expr_p();
     }
     else if(checkTk(Token::OpenPar))
     {
         curr_token = lexer.getNextToken();
         expr();
         if(checkTk(Token::ClosePar))
+        {
             curr_token = lexer.getNextToken();
+            expr_p();
+        }
         else
-            throw "Se esperaba '(' al final de la expr pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+            throw "Se esperaba ')' al final de la expr pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
     }
     else
         throw "Se esperaba ID | const | - | no | ( pero se encontro  " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
-    expr_p();
 }
 void Parser::expr_p()
 {

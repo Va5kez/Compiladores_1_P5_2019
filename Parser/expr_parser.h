@@ -7,10 +7,10 @@ class Parser {
 public:
     Parser(ExprLexer& lexer): lexer(lexer){}
     void parse();
-    void program(); // Implementar
-    void subtypes_sections(); // Implementar
+    void program();
+    void subtypes_sections();
     void subtype_decl();
-    void variable_section(); // Implementar
+    void variable_section();
     void variable_decl();
     void type();
     void array_type();
