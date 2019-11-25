@@ -1,10 +1,11 @@
 #include <sstream>
 #include <memory>
 #include <cstring>
-#include "expr_lexer.h"
+#include "expr_parser.h"
 
 std::string toString(Token tk) {
     switch (tk) {
+        case Token::Eol: return "EOL";
         case Token::intConstant: return "intConstant";
         case Token::charConstant: return "charConstant";
         case Token::stringConstant: return "stringConstant";
@@ -53,13 +54,14 @@ int main(int argc, char **argv)
     if(file.is_open())
     {
         ExprLexer l(file);
-        Token token = l.getNextToken();
+        Parser parser(l);
+        /*Token token = l.getNextToken();
 
         while(token != Token::Eof)
         {
             std::cout << "Token " << toString(token) << " -> " << l.getText() << std::endl;
             token = l.getNextToken();
-        }
+        }*/
     }
     else
     {

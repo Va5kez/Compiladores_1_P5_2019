@@ -29,7 +29,9 @@ set_source_files_properties(
 include_directories(${CMAKE_BINARY_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/../)
+include_directories(${PROJECT_SOURCE_DIR}/../../Parser/)
   
 add_executable(${PROJECT_NAME}  expr_lexer.cpp
+                                ${PROJECT_SOURCE_DIR}/../../Parser/expr_parser.cpp
                                 test_lexer.cpp)
 
