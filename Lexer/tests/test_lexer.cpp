@@ -55,6 +55,20 @@ int main(int argc, char **argv)
     {
         ExprLexer l(file);
         Parser parser(l);
+        bool success = false;
+        try
+        {
+            parser.parse();
+            success = true;
+        }
+        catch(std::string msg)
+        {
+            std::cerr << "Error: " << msg << '\n';
+            success = false;
+        }
+        if(success)
+            std::cout << "Parser sin errores" << '\n';
+        
         /*Token token = l.getNextToken();
 
         while(token != Token::Eof)
