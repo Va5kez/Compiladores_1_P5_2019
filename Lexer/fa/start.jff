@@ -3,32 +3,46 @@
 	<automaton>
 		<!--The list of states.-->
 		<state id="0" name="q0">
-			<x>93.0</x>
-			<y>124.0</y>
+			<x>51.0</x>
+			<y>125.0</y>
 			<label>text = ""</label>
 			<initial/>
 		</state>
 		<state id="1" name="q1">
-			<x>136.0</x>
-			<y>228.0</y>
+			<x>94.0</x>
+			<y>229.0</y>
 			<label>line += 1</label>
 		</state>
 		<state id="2" name="q2">
-			<x>228.0</x>
-			<y>125.0</y>
+			<x>186.0</x>
+			<y>126.0</y>
 			<label>Eof</label>
 			<final/>
 		</state>
 		<state id="3" name="q3">
-			<x>229.0</x>
-			<y>224.0</y>
+			<x>180.0</x>
+			<y>230.0</y>
+		</state>
+		<state id="4" name="q4">
+			<x>261.0</x>
+			<y>229.0</y>
 			<label>Eol</label>
 			<final/>
 		</state>
 		<!--The list of transitions.-->
 		<transition>
-			<from>1</from>
-			<to>3</to>
+			<from>0</from>
+			<to>2</to>
+			<read>EOF</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>0</to>
+			<read>-SPACE</read>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>4</to>
 			<read/>
 		</transition>
 		<transition>
@@ -37,14 +51,9 @@
 			<read>-EOL</read>
 		</transition>
 		<transition>
-			<from>0</from>
-			<to>0</to>
-			<read>-SPACE</read>
-		</transition>
-		<transition>
-			<from>0</from>
-			<to>2</to>
-			<read>EOF</read>
+			<from>1</from>
+			<to>3</to>
+			<read/>
 		</transition>
 		<transition>
 			<from>0</from>
