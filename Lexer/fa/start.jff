@@ -9,8 +9,8 @@
 			<initial/>
 		</state>
 		<state id="1" name="q1">
-			<x>169.0</x>
-			<y>209.0</y>
+			<x>136.0</x>
+			<y>228.0</y>
 			<label>line += 1</label>
 		</state>
 		<state id="2" name="q2">
@@ -19,11 +19,22 @@
 			<label>Eof</label>
 			<final/>
 		</state>
+		<state id="3" name="q3">
+			<x>229.0</x>
+			<y>224.0</y>
+			<label>Eol</label>
+			<final/>
+		</state>
 		<!--The list of transitions.-->
 		<transition>
+			<from>1</from>
+			<to>3</to>
+			<read/>
+		</transition>
+		<transition>
 			<from>0</from>
-			<to>2</to>
-			<read>EOF</read>
+			<to>1</to>
+			<read>-EOL</read>
 		</transition>
 		<transition>
 			<from>0</from>
@@ -32,18 +43,13 @@
 		</transition>
 		<transition>
 			<from>0</from>
-			<to>0</to>
-			<read>-TAB</read>
+			<to>2</to>
+			<read>EOF</read>
 		</transition>
 		<transition>
 			<from>0</from>
-			<to>1</to>
-			<read>-EOL</read>
-		</transition>
-		<transition>
-			<from>1</from>
 			<to>0</to>
-			<read/>
+			<read>-TAB</read>
 		</transition>
 		<note>
 			<text>Name:start</text>
