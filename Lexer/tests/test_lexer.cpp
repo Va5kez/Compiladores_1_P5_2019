@@ -61,7 +61,7 @@ int main(int argc, char **argv)
             parser.parse();
             success = true;
         }
-        catch(std::string msg)
+        catch(const char* msg)
         {
             std::cerr << "Error: " << msg << '\n';
             success = false;
