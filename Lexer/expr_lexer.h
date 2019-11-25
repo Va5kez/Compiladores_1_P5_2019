@@ -13,6 +13,7 @@ public:
     ~ExprLexer() {}
     Token getNextToken();
     Token findKeyWord(std::string text);
+    int getLine() {return line;}
     std::string getText() { return text; }
 
 private:
