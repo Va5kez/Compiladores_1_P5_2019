@@ -2,6 +2,7 @@
 #include <memory>
 #include <cstring>
 #include "expr_parser.h"
+#include <exception>
 
 std::string toString(Token tk) {
     switch (tk) {
@@ -65,6 +66,11 @@ int main(int argc, char **argv)
         {
             std::cerr << "Error: " << msg << '\n';
             success = false;
+        }
+        catch(...)
+        {
+            std::cout << "Ultima token :" << l.getText() << " Linea: " << l.getLine() << " # de token " << toString(parser.getToken()) << '\n';
+            std::cerr << "Unknown Exception" << '\n';
         }
         if(success)
             std::cout << "Parser sin errores" << '\n';
