@@ -36,7 +36,7 @@ public:
     void cond_op();
     void constant();
     void bool_constant();
-
+    Token getToken(){return curr_token;}
 
 private:
     ExprLexer& lexer;
