@@ -36,7 +36,7 @@ void Parser::program()
     if(checkTk(Token::Inicio))
     {
         curr_token = lexer.getNextToken();
-        if(checkTk(Token::Eol))
+        while(checkTk(Token::Eol))
             curr_token = lexer.getNextToken();
         if(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
         {
@@ -354,7 +354,7 @@ void Parser::statement()
     else if(checkTk(Token::Escriba))
     {
         curr_token = lexer.getNextToken();
-        if(checkTk(Token::stringConstant, Token::ID, Token::Op_Sub, Token::No, Token::OpenPar, Token::stringConstant, Token::intConstant, 
+        if(checkTk(Token::stringConstant, Token::ID, Token::Op_Sub, Token::No, Token::OpenPar, Token::charConstant, Token::intConstant, 
                     Token::Verdadero, Token::Falso))
         {
             argument();
@@ -497,57 +497,124 @@ void Parser::statement()
 }
 void Parser::if_statement()
 {
-
-}
-void Parser::else_if_block()
-{
-    if(checkTk(Token::Sino))
+    if(checkTk(Token::Si))
     {
         curr_token = lexer.getNextToken();
-        if(checkTk(Token::Si))
+        expr();
+        while(checkTk(Token::Eol))
+            curr_token = lexer.getNextToken();
+        if(checkTk(Token::Entonces))
         {
             curr_token = lexer.getNextToken();
-            expr();
-            if(checkTk(Token::Eol))
+            while(checkTk(Token::Eol))
                 curr_token = lexer.getNextToken();
-            if(checkTk(Token::Entonces))
+            statement();
+            while(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+            while(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
             {
-                curr_token = lexer.getNextToken();
                 statement();
-                if(checkTk(Token::Eol))
-                    curr_token = lexer.getNextToken();
-                while(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
-                {
-                    statement();
-                    if(checkTk(Token::Eol))
-                        curr_token = lexer.getNextToken();
-                }
                 while(checkTk(Token::Eol))
                     curr_token = lexer.getNextToken();
             }
-            else
-                throw "Se esperaba 'entonces' pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+            if(checkTk(Token::Sino))
+            {
+                curr_token = lexer.getNextToken();
+                if(checkTk(Token::Si))
+                {
+                    else_if_block();
+                    while(checkTk(Token::Eol))
+                        curr_token = lexer.getNextToken();
+                    while(checkTk(Token::Sino))
+                    {
+                        curr_token = lexer.getNextToken();
+                        if(checkTk(Token::Si))
+                        {
+                            else_if_block();
+                            while(checkTk(Token::Eol))
+                                curr_token = lexer.getNextToken();
+                        }
+                        else
+                        {
+                            else_block();
+                            while(checkTk(Token::Eol))
+                                curr_token = lexer.getNextToken();
+                            break;
+                        }
+                    }   
+                }
+                else
+                {
+                    else_block();
+                    while(checkTk(Token::Eol))
+                        curr_token = lexer.getNextToken();
+                } 
+            }
+            if(checkTk(Token::Fin))
+            {
+                curr_token = lexer.getNextToken();
+                if(checkTk(Token::Si))
+                {
+                    curr_token = lexer.getNextToken();
+                    while(checkTk(Token::Eol))
+                        curr_token = lexer.getNextToken();
+
+                }
+                else
+                    throw "Falto Si al final del Fin " + '\n';
+            }
         }
         else
-                throw "Se esperaba 'si' pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+            throw "If-statement -> Se esperaba Entonces pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
     }
+    else
+        throw "If_statement -> Se esperaba Si pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+}
+void Parser::else_if_block()
+{
+    if(checkTk(Token::Si))
+    {
+        curr_token = lexer.getNextToken();
+        expr();
+        while(checkTk(Token::Eol))
+            curr_token = lexer.getNextToken();
+        if(checkTk(Token::Entonces))
+        {
+            curr_token = lexer.getNextToken();
+            while(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+            statement();
+            while(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+            while(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
+            {
+                statement();
+                while(checkTk(Token::Eol))
+                    curr_token = lexer.getNextToken();
+            }
+            while(checkTk(Token::Eol))
+                curr_token = lexer.getNextToken();
+        }
+        else
+            throw "Se esperaba Entonces pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+    }
+    else
+        throw "Se esperaba 'si' pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
 }
 void Parser::else_block()
 {
-    if(checkTk(Token::Sino))
-    {
+
+    curr_token = lexer.getNextToken();
+    if(checkTk(Token::Eol))
         curr_token = lexer.getNextToken();
-        if(checkTk(Token::Eol))
-            curr_token = lexer.getNextToken();
+    statement();
+    if(checkTk(Token::Eol))
+        curr_token = lexer.getNextToken();
+    while(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
+    {
         statement();
         if(checkTk(Token::Eol))
-            curr_token = lexer.getNextToken();
-        while(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
-        {
-            statement();
-            if(checkTk(Token::Eol))
                 curr_token = lexer.getNextToken();
-        }
     }
 }
 void Parser::argument()
@@ -625,7 +692,11 @@ void Parser::expr()
             throw "Se esperaba ')' al final de la expr pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
     }
     else
+    {
+        std::cout << "Me pase" << '\n';
         throw "Se esperaba ID | const | - | no | ( pero se encontro  " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
+    }
+        
 }
 void Parser::expr_p()
 {
@@ -704,7 +775,7 @@ void Parser::rel_op()
 void Parser::eq_op()
 {
     if(checkTk(Token::Op_Equal, Token::Op_Equal_2))
-        curr_token == lexer.getNextToken();
+        curr_token = lexer.getNextToken();
     else
         throw "Se esperaba = | <> Pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
 }
