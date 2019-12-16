@@ -23,6 +23,7 @@ enum class ASTNodeKind
     llamar_stmt,
     escriba_stmt,
     retorne_stmt,
+    params_t,
     // Binary Operations
     Op_Arit_Add_Expr,
     Op_Arit_Sub_Expr,
@@ -37,7 +38,12 @@ enum class ASTNodeKind
     Op_Con_Y_Expr,
     Op_Con_O_Expr,
     Op_Equality, // <> == 
-    Op_Asignar
+    Op_Asignar,
+    // Decl
+    Decl_subtype,
+    Decl_variable,
+    Decl_Argument,
+    Decl_Subprogram
 };
 
 enum class Types{
