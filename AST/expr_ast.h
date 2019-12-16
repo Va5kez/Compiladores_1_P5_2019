@@ -229,4 +229,37 @@ class ParaStatement : public Statement{
         std::list<Statement *> para_stmtlist;
 };
 
+class LeaStatement :public Statement {
+    public:
+        LeaStatement(AST *lvalue) : lvalue_list(lvalue) {} // Needs to be changed
+        ~LeaStatement() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::lea_stmt; }
+        AST *lvalue_list;
+};
+
+class LlamarStatement : public Statement{
+    public:
+        LlamarStatement(std::string id, AST *expr) : id(id), expr(expr) {}
+        ~LlamarStatement() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::llamar_stmt; }
+        std::string id;
+        AST *expr;
+};
+
+class RetorneStatement : public Statement{
+    public:
+        RetorneStatement(AST *expr) : expr(expr)  {}
+        ~RetorneStatement() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::retorne_stmt; }
+        AST *expr;
+};
+
+class EscribaStatement : public Statement{
+    public:
+        EscribaStatement(std::list<AST *> arguments) : argumentlist(arguments) {}
+        ~EscribaStatement() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::escriba_stmt; }
+        std::list<AST *> argumentlist;
+};
+
 #endif // _EXPR_AST_H_
