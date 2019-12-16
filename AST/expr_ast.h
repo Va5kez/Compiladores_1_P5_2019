@@ -2,6 +2,7 @@
 #define _EXPR_AST_H_
 
 #include <string>
+#include <list>
 #include "public_enums_ast.h"
 
 class AST{
@@ -161,6 +162,71 @@ class EqualityExpr : public AST{
         ~EqualityExpr() {}
         ASTNodeKind getKind() override { return ASTNodeKind::Op_Equality; }
         AST *lhs, *rhs;
+};
+
+class AsignarExpr : public AST{
+    public:
+        AsignarExpr(AST *lvalue, AST *expr) : lvalue(lvalue), expr(expr) {}
+        ~AsignarExpr() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::Op_Asignar; }
+        AST *lvalue, *expr;
+};
+
+class SiStatement : public Statement{
+    public:
+        SiStatement(AST *expr, std::list<Statement *> Stmtlist, std::list<SinoSiStatement *> sinosi_stmtlist, std::list<SinoStatement *> sino_stmtlist) 
+                    : expr_if(expr), if_stmtlist(Stmtlist), ss_stmtlist(sinosi_stmtlist), s_stmtlist(sino_stmtlist) {}
+        ~SiStatement() {}
+        AST *expr_if;
+        std::list<Statement *> if_stmtlist;
+        std::list<SinoSiStatement *> ss_stmtlist;
+        std::list<SinoStatement *> s_stmtlist; 
+};
+
+class SinoSiStatement : public Statement{
+    public:
+        SinoSiStatement(AST *expr, std::list<Statement *> Stmtlist) : expr(expr), Sino_si_stmtlist(Stmtlist) {}
+        ~SinoSiStatement() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::sino_si_stmt; }
+        AST *expr;
+        std::list<Statement *> Sino_si_stmtlist;
+};
+
+class SinoStatement : public Statement{
+    public:
+        SinoStatement(std::list<Statement *> Stmtlist) : Sino_stmtlist(Stmtlist) {}
+        ~SinoStatement() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::sino_stmt; }
+        std::list<Statement *> Sino_stmtlist;
+};
+
+class MientrasStatement : public Statement{
+    public:
+        MientrasStatement(AST *expr, std::list<Statement *> Stmtlist) : expr(expr), mientras_stmtlist(Stmtlist) {}
+        ~MientrasStatement() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::mientras_stmt; }
+        AST *expr;
+        std::list<Statement *> mientras_stmtlist;
+};
+
+class RepitaStatement : public Statement{
+    public:
+        RepitaStatement(AST *expr, std::list<Statement *> Stmtlist) : expr(expr), repita_stmtlist(Stmtlist) {}
+        ~RepitaStatement() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::repita_stmt; }
+        AST *expr;
+        std::list<Statement *> repita_stmtlist;
+};
+
+class ParaStatement : public Statement{
+    public:
+        ParaStatement(AsignarExpr *asignar, AST *expr, std::list<Statement *> Stmtlist) : asignar(asignar), expr(expr),
+                    para_stmtlist(para_stmtlist) {}
+        ~ParaStatement() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::para_stmt; }
+        AsignarExpr *asignar;
+        AST *expr;
+        std::list<Statement *> para_stmtlist;
 };
 
 #endif // _EXPR_AST_H_
