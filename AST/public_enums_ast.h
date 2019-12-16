@@ -13,15 +13,16 @@ enum class ASTNodeKind
     // Conditional etc ..
     funcion,
     procedimiento,
-    si,
-    sino,
-    para,
-    mientras,
-    llamar,
-    repita,
-    lea,
-    escriba,
-    retorne,
+    si_stmt,
+    sino_si_stmt,
+    sino_stmt,
+    para_stmt,
+    mientras_stmt,
+    repita_stmt,
+    lea_stmt,
+    llamar_stmt,
+    escriba_stmt,
+    retorne_stmt,
     // Binary Operations
     Op_Arit_Add_Expr,
     Op_Arit_Sub_Expr,
@@ -35,7 +36,8 @@ enum class ASTNodeKind
     Op_Rel_LTE_Expr,
     Op_Con_Y_Expr,
     Op_Con_O_Expr,
-    Op_Equality // <> == 
+    Op_Equality, // <> == 
+    Op_Asignar
 };
 
 enum class Types{
