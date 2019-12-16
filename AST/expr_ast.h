@@ -17,6 +17,24 @@ class Statement : public AST{
         virtual ASTNodeKind getKind() = 0;
 };
 
+class Program : public Statement{
+    public:
+        Program() {}
+        ~Program() {}
+        virtual ASTNodeKind getKind() = 0;
+        virtual std::list<Params *> getParams() = 0;
+        virtual std::string getName() = 0; 
+};
+
+class Params : public Statement{
+    public:
+        Params(std::string name, Types type) : name(name), type(type) {}
+        ~Params() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::params_t; }
+        std::string name;
+        Types type;
+};
+
 class BooleanConstantExpr : public AST{
     public:
         BooleanConstantExpr(bool value) : value(value) {}
@@ -260,6 +278,29 @@ class EscribaStatement : public Statement{
         ~EscribaStatement() {}
         ASTNodeKind getKind() override { return ASTNodeKind::escriba_stmt; }
         std::list<AST *> argumentlist;
+};
+
+class Funcion : public Program{
+    public:
+        Funcion(std::string name, Types type, std::list<Params *> params) : name(name), type(type), params(params)  {}
+        ~Funcion() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::funcion; }
+        std::string getName() override { return name; }
+        std::list<Params *>  getParams() override { return params; }
+        std::string name;
+        Types type;
+        std::list<Params *> params;
+};
+
+class Procedimiento : public Program{
+    public:
+        Procedimiento(std::string name, std::list<Params *> params) : name(name), params(params) {}
+        ~Procedimiento() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::procedimiento; }
+        std::string getName() override { return name; }
+        std::list<Params *> getParams() override { return params; }
+        std::string name;
+        std::list<Params *> params;
 };
 
 #endif // _EXPR_AST_H_
