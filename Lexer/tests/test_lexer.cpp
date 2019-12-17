@@ -2,6 +2,7 @@
 #include <memory>
 #include <cstring>
 #include "expr_parser.h"
+#include "../AST/expr_ast.h"
 #include <exception>
 
 std::string toString(Token tk) {
@@ -59,7 +60,9 @@ int main(int argc, char **argv)
         bool success = false;
         try
         {
-            parser.parse();
+            AST *p = parser.parse();
+            std::cout << "Pase del parser " << '\n';
+            std::cout << p->toString() << std::endl;
             success = true;
         }
         catch(const char* msg)
