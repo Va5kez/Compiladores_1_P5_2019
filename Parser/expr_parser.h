@@ -25,7 +25,7 @@ public:
     AST *else_if_block();
     AST *else_block();
     AST *argument();
-    AST *lvalue();
+    std::string lvalue();
     AST *lvalue_p();
     AST *expr();
     AST * expr_p();

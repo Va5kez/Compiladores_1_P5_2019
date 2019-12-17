@@ -17,7 +17,6 @@ AST *Parser::parse()
 }
 AST *Parser::program()
 {
-    AST *temp;
     if(checkTk(Token::Tipo))
         subtypes_sections();
     if(checkTk(Token::Entero, Token::Booleano, Token::Caracter, Token::Arreglo))
@@ -36,17 +35,20 @@ AST *Parser::program()
     }
     if(checkTk(Token::Inicio))
     {
+        std::list<AST *> stmtlist;
         curr_token = lexer.getNextToken();
         while(checkTk(Token::Eol))
             curr_token = lexer.getNextToken();
         if(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
         {
-            temp = statement();
+            //AST *temp = statement();
+            stmtlist.push_back(statement());
             while(checkTk(Token::Eol))
                 curr_token = lexer.getNextToken();
             while(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
             {
-                statement();
+                //temp2 = statement();
+                stmtlist.push_back(statement());
                 while(checkTk(Token::Eol))
                     curr_token = lexer.getNextToken();
             }
@@ -58,7 +60,9 @@ AST *Parser::program()
             curr_token = lexer.getNextToken();
             if(checkTk(Token::Eol))
                 curr_token = lexer.getNextToken();
-                return temp;
+            StatementList *e = new StatementList(stmtlist);
+            //std::cout << e->toString() << std::endl;
+            return e;
         }
         else
             throw "Program -> Se esperaba Fin pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
@@ -316,14 +320,16 @@ AST *Parser::argument_decl()
 }
 AST *Parser::statement()
 {
-    AST *temp;
     if(checkTk(Token::ID))
     {
-        lvalue();
+        AST *temp;
+        std::string l = lvalue();
         if(checkTk(Token::Op_Assign))
         {
             curr_token = lexer.getNextToken();
-            expr();
+            temp = expr();
+            AsignarExpr *f =  new AsignarExpr(l, temp);
+            return f;
         }
         else
             throw "Statement:ID -> Se esperaba '<-' pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
@@ -356,17 +362,21 @@ AST *Parser::statement()
     }
     else if(checkTk(Token::Escriba))
     {
+        AST *temp;
         curr_token = lexer.getNextToken();
         if(checkTk(Token::stringConstant, Token::ID, Token::Op_Sub, Token::No, Token::OpenPar, Token::charConstant, Token::intConstant, 
                     Token::Verdadero, Token::Falso))
         {
-            
             temp = argument();
             while(checkTk(Token::Coma))
             {
                 curr_token = lexer.getNextToken();
                 argument();
+                if(checkTk(Token::Eol))
+                    curr_token = lexer.getNextToken();
             }
+            if(checkTk(Token::Eol))
+                    curr_token = lexer.getNextToken();
             EscribaStatement *s = new EscribaStatement(temp);
             return s;
         }
@@ -635,12 +645,14 @@ AST *Parser::argument()
     else
         return expr();
 }
-AST *Parser::lvalue()
+std::string Parser::lvalue()
 {
     if(checkTk(Token::ID))
     {
+        std::string l = lexer.getText();
         curr_token = lexer.getNextToken();
         lvalue_p();
+        return l;
     }
 }
 AST *Parser::lvalue_p()
@@ -660,6 +672,7 @@ AST *Parser::expr()
 {
     if(checkTk(Token::ID))
     {
+        IdentExpr *l = new IdentExpr(lexer.getText(), "0");
         curr_token = lexer.getNextToken();
         if(checkTk(Token::OpenPar))
         {
@@ -671,11 +684,28 @@ AST *Parser::expr()
             lvalue_p();
             expr_p();
         }
+        return l;
     }
     else if(checkTk(Token::intConstant, Token::charConstant, Token::Verdadero,  Token::Falso))
     {
+        std::string f = lexer.getText();
         std::string l = constant();
         if(l == "intConstant")
+        {
+            IntConstantExpr *a = new IntConstantExpr(std::stoi(f));
+            return a;
+        }
+        else if(l == "charConstant")
+        {
+            CharConstantExpr *a = new CharConstantExpr(f);
+            return a;
+        }
+        else if(l == "verdadero" || l == "falso")
+        {
+            bool s = l == "falso" ? 0 : 1;
+            BooleanConstantExpr *a = new BooleanConstantExpr(s);
+            return a;
+        }
         expr_p();
     }
         
@@ -855,7 +885,7 @@ std::string Parser::constant()
 {
     if(checkTk(Token::intConstant, Token::charConstant))
     {
-        std::string l = lexer.getText();
+        std::string l = curr_token == Token::intConstant ? "intConstant" : "charConstant";
         curr_token = lexer.getNextToken();
         return l;
     }
