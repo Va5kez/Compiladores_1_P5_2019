@@ -44,28 +44,30 @@ class BooleanConstantExpr : public AST{
         BooleanConstantExpr(bool value) : value(value) {}
         ~BooleanConstantExpr() {}
         ASTNodeKind getKind() override { return value == true ? ASTNodeKind::verdadero : ASTNodeKind::falso; }
+        std::string toString() override { return value == 1 ? "verdadero" : "falso"; }
         bool value;
 };
 
 class CharConstantExpr : public AST{
     public:
-        CharConstantExpr(char value) : value(value) {}
+        CharConstantExpr(std::string value) : value(value) {}
         ~CharConstantExpr() {}
         ASTNodeKind getKind() override { return ASTNodeKind::charConstant; }
-        std::string toString() override { return std::to_string(value); }
-        char value; 
+        std::string toString() override { return "'"+value+"'"; }
+        std::string value; 
 };
 
-template <typename T>
+//template <typename T>
 class IdentExpr : public AST{
     public:
-        IdentExpr(std::string id, T value) : id(id), value(value) {}
+        IdentExpr(std::string id, std::string value) : id(id), value(value) {}
         ~IdentExpr() {}
         ASTNodeKind getKind() override { return ASTNodeKind::ident; }
         std::string getId() {return id; }
-        std::string toString() override { return std::to_string(value); }
+        std::string toString() override { return id; }
         std::string id;
-        T value;
+        //T value;
+        std::string value;
 };
 
 class IntConstantExpr : public AST{
@@ -205,11 +207,29 @@ class EqualityExpr : public AST{
 
 class AsignarExpr : public AST{
     public:
-        AsignarExpr(AST *lvalue, AST *expr) : lvalue(lvalue), expr(expr) {}
+        AsignarExpr(std::string lvalue, AST *expr) : lvalue(lvalue), expr(expr) {}
         ~AsignarExpr() {}
         ASTNodeKind getKind() override { return ASTNodeKind::Op_Asignar; }
-        std::string toString() override { return lvalue->toString()+"<-"+expr->toString(); }
-        AST *lvalue, *expr;
+        std::string toString() override { return lvalue+"<-"+expr->toString(); }
+        AST *expr;
+        std::string lvalue;
+};
+
+class StatementList : public AST{
+    public:
+        StatementList(std::list<AST *> x) : inc(x){}
+        StatementList() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::Decl_variable; }
+        std::string toString() override {
+            std::list<AST *>::iterator it;
+            for(it = this->inc.begin(); it != this->inc.end(); it++)
+            {
+                str = str+"\n"+(*it)->toString();
+            }
+            return str;
+        }   
+        std::list<AST *> inc;
+        std::string str;
 };
 /*
 class SiStatement : public Statement{
