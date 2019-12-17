@@ -147,7 +147,7 @@ class GTExpr : public AST{
         GTExpr(AST *x, AST *y) : lhs(x), rhs(y) {}
         ~GTExpr() {}
         ASTNodeKind getKind() override { return ASTNodeKind::Op_Rel_GT_Expr; }
-        std::string toString() override { return lhs->toString()+" < "+rhs->toString(); }
+        std::string toString() override { return lhs->toString()+" > "+rhs->toString(); }
         AST *lhs, *rhs;
 };
 
@@ -156,7 +156,7 @@ class GTEExpr : public AST{
         GTEExpr(AST *x, AST *y) : lhs(x), rhs(y) {}
         ~GTEExpr() {}
         ASTNodeKind getKind() override { return ASTNodeKind::Op_Rel_GTE_Expr; }
-        std::string toString() override { return lhs->toString()+" <= "+rhs->toString(); }
+        std::string toString() override { return lhs->toString()+" >= "+rhs->toString(); }
         AST *lhs, *rhs;
 };
 
@@ -165,7 +165,7 @@ class LTExpr : public AST{
         LTExpr(AST *x, AST *y) : lhs(x), rhs(y) {}
         ~LTExpr() {}
         ASTNodeKind getKind() override { return ASTNodeKind::Op_Rel_LT_Expr; }
-        std::string toString() override { return lhs->toString()+" > "+rhs->toString(); }
+        std::string toString() override { return lhs->toString()+" < "+rhs->toString(); }
         AST *lhs, *rhs;
 };
 
@@ -174,7 +174,7 @@ class LTEExpr : public AST{
         LTEExpr(AST *x, AST *y) : lhs(x), rhs(y) {}
         ~LTEExpr() {}
         ASTNodeKind getKind() override { return ASTNodeKind::Op_Rel_LTE_Expr; }
-        std::string toString() override { return lhs->toString()+" >= "+rhs->toString(); }
+        std::string toString() override { return lhs->toString()+" <= "+rhs->toString(); }
         AST *lhs, *rhs;
 };
 
@@ -273,17 +273,27 @@ class MientrasStatement : public Statement{
         AST *expr;
         std::list<Statement *> mientras_stmtlist;
 };
-
+*/
 class RepitaStatement : public Statement{
     public:
-        RepitaStatement(AST *expr, std::list<Statement *> Stmtlist) : expr(expr), repita_stmtlist(Stmtlist) {}
+        RepitaStatement(AST *expr, std::list<AST *> Stmtlist) : expr(expr), repita_stmtlist(Stmtlist) {}
         ~RepitaStatement() {}
         ASTNodeKind getKind() override { return ASTNodeKind::repita_stmt; }
-        std::string toString() override { return " "; }
+        std::string toString() override {
+            std::list<AST *>::iterator it;
+            str = "Repita\n";
+            for(it = this->repita_stmtlist.begin(); it != this->repita_stmtlist.end(); it++)
+            {
+                str = str+"\n"+(*it)->toString();
+            }
+            str = str + "\nHasta "+expr->toString();
+            return str; 
+        }
         AST *expr;
-        std::list<Statement *> repita_stmtlist;
+        std::string str;
+        std::list<AST *> repita_stmtlist;
 };
-
+/*
 class ParaStatement : public Statement{
     public:
         ParaStatement(AsignarExpr *asignar, AST *expr, std::list<Statement *> Stmtlist) : asignar(asignar), expr(expr),
