@@ -62,7 +62,9 @@ int main(int argc, char **argv)
         {
             AST *p = parser.parse();
             std::cout << "Pase del parser " << '\n';
+            std::cout << "\n--------------------------\n";
             std::cout << p->toString() << std::endl;
+            std::cout << "\n--------------------------\n";
             success = true;
         }
         catch(const char* msg)
