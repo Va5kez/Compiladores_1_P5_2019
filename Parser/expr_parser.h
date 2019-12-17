@@ -2,40 +2,41 @@
 #define _PARSER_H_
 
 #include "../Lexer/expr_lexer.h"
+#include "../AST/expr_ast.h"
 
 class Parser {
 public:
     Parser(ExprLexer& lexer): lexer(lexer){}
-    void parse();
-    void program();
-    void subtypes_sections();
-    void subtype_decl();
-    void variable_section();
-    void variable_decl();
-    void type();
-    void array_type();
-    void subprogram_decl();
-    void subprogram_header();
-    void function_header();
-    void procedure_header();
-    void argument_decl();
-    void statement();
-    void if_statement();// Implementar
-    void else_if_block();
-    void else_block();
-    void argument();
-    void lvalue();
-    void lvalue_p();
-    void expr();
-    void expr_p();
-    void expr_p2();
-    void bin_op();
-    void arith_op();
-    void rel_op();
-    void eq_op();
-    void cond_op();
-    void constant();
-    void bool_constant();
+    AST *parse();
+    AST *program();
+    AST *subtypes_sections();
+    AST *subtype_decl();
+    AST *variable_section();
+    AST *variable_decl();
+    Types type();
+    Types array_type();
+    AST *subprogram_decl();
+    AST *subprogram_header();
+    AST *function_header();
+    AST *procedure_header();
+    AST *argument_decl();
+    AST *statement();
+    AST *if_statement();
+    AST *else_if_block();
+    AST *else_block();
+    AST *argument();
+    AST *lvalue();
+    AST *lvalue_p();
+    AST *expr();
+    AST * expr_p();
+    AST *expr_p2();
+    std::string bin_op();
+    std::string arith_op();
+    std::string rel_op();
+    std::string eq_op();
+    std::string cond_op();
+    std::string constant();
+    std::string bool_constant();
     Token getToken(){return curr_token;}
 
 private:
