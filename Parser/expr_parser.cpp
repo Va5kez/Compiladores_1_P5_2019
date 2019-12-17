@@ -442,12 +442,13 @@ AST *Parser::statement()
     }
     else if(checkTk(Token::Repita))
     {
+        std::list<AST *> rp_stmtlist;
         curr_token = lexer.getNextToken();
         if(checkTk(Token::Eol))
             curr_token = lexer.getNextToken();
         while(checkTk(Token::ID, Token::Llamar, Token::Escriba, Token::Lea, Token::Retorne, Token::Si, Token::Mientras, Token::Repita, Token::Para))
         {
-            statement();
+            rp_stmtlist.push_back(statement());
             if(checkTk(Token::Eol))
                 curr_token = lexer.getNextToken();
         }
@@ -456,9 +457,10 @@ AST *Parser::statement()
         if(checkTk(Token::Hasta))
         {
             curr_token = lexer.getNextToken();
-            expr();
+            AST *tem = expr();
+            RepitaStatement *f = new RepitaStatement(tem, rp_stmtlist);
+            return f;
         }
-            
         else
             throw "Se esperaba Hasta pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
     }
@@ -706,6 +708,10 @@ AST *Parser::expr()
                 case Token::Div: op = "div"; break;
                 case Token::Op_Pow: op = "^"; break;
                 case Token::Mod: op = "mod"; break;
+                case Token::Op_GT: op = ">"; break;
+                case Token::Op_Gre_OE: op = ">="; break;
+                case Token::Op_LT: op = "<"; break;
+                case Token::Op_Less_OE: op = "<="; break;
             }
             AST *tem = expr_p();
             if(op == "+") { AddExpr *f = new AddExpr(l, tem); return f; }
@@ -714,6 +720,10 @@ AST *Parser::expr()
             else if(op == "div") { DivExpr *f = new DivExpr(l, tem); return f; }
             else if(op == "^") { PowExpr *f = new PowExpr(l, tem); return f; }
             else if(op == "mod") { ModExpr *f = new ModExpr(l, tem); return f; }
+            else if(op == ">") { GTExpr *f = new GTExpr(l, tem); return f; }
+            else if(op == ">=") { GTEExpr *f = new GTEExpr(l, tem); return f; }
+            else if(op == "<") { LTExpr *f = new LTExpr(l, tem); return f; }
+            else if(op == "<=") { LTEExpr *f = new LTEExpr(l, tem); return f; }
         }
         return l;
     }
