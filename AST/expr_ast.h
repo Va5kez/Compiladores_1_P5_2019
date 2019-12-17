@@ -324,6 +324,16 @@ class RetorneStatement : public Statement{
         AST *expr;
 };
 
+class LvalueExpr : public AST{
+    public:
+        LvalueExpr(std::string st, AST *tm) : str(st), tm(tm) {}
+        ~LvalueExpr() {}
+        ASTNodeKind getKind() override { return ASTNodeKind::Decl_variable; } //change astnodekind
+        std::string toString() override { return str+"["+tm->toString()+"]"; }
+        std::string str;
+        AST *tm;
+};
+
 class EscribaStatement : public Statement{
     public:
         EscribaStatement(AST *expr) : expr(expr)/*argumentlist(arguments)*/ {} // list arguments.
