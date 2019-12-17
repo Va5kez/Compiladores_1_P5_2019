@@ -651,7 +651,12 @@ std::string Parser::lvalue()
     {
         std::string l = lexer.getText();
         curr_token = lexer.getNextToken();
-        lvalue_p();
+        if(checkTk(Token::OpenBr))
+        {
+            AST *a = lvalue_p();
+            LvalueExpr *f = new LvalueExpr(l,a);
+            return f->toString();
+        }
         return l;
     }
 }
@@ -660,9 +665,13 @@ AST *Parser::lvalue_p()
     if(checkTk(Token::OpenBr))
     {
         curr_token = lexer.getNextToken();
-        expr();
+        AST *t = expr();
         if(checkTk(Token::CloseBr))
+        {
             curr_token = lexer.getNextToken();
+            return t;
+        }
+            
         else
             throw "Se esperaba ']' al final de la expr pero se encontro " + lexer.getText() + " en la linea " + std::to_string(lexer.getLine());
     }
@@ -682,7 +691,12 @@ AST *Parser::expr()
         }
         else
         {
-            lvalue_p();
+            if(checkTk(Token::OpenBr))
+            {
+                AST *z = lvalue_p();
+                LvalueExpr *j = new LvalueExpr(t,z);
+                return j;
+            }
             std::string op;
             switch (curr_token)
             {
