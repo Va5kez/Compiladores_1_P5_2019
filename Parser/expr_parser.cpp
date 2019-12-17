@@ -672,6 +672,7 @@ AST *Parser::expr()
 {
     if(checkTk(Token::ID))
     {
+        std::string t = lexer.getText();
         IdentExpr *l = new IdentExpr(lexer.getText(), "0");
         curr_token = lexer.getNextToken();
         if(checkTk(Token::OpenPar))
@@ -682,7 +683,23 @@ AST *Parser::expr()
         else
         {
             lvalue_p();
-            expr_p();
+            std::string op;
+            switch (curr_token)
+            {
+                case Token::Op_Add: op = "+"; break;
+                case Token::Op_Sub: op = "-"; break;
+                case Token::Op_Mul: op = "*"; break;
+                case Token::Div: op = "div"; break;
+                case Token::Op_Pow: op = "^"; break;
+                case Token::Mod: op = "mod"; break;
+            }
+            AST *tem = expr_p();
+            if(op == "+") { AddExpr *f = new AddExpr(l, tem); return f; }
+            else if(op == "-") { SubExpr *f = new SubExpr(l, tem); return f; }
+            else if(op == "*") { MultExpr *f = new MultExpr(l, tem); return f; }
+            else if(op == "div") { DivExpr *f = new DivExpr(l, tem); return f; }
+            else if(op == "^") { PowExpr *f = new PowExpr(l, tem); return f; }
+            else if(op == "mod") { ModExpr *f = new ModExpr(l, tem); return f; }
         }
         return l;
     }
